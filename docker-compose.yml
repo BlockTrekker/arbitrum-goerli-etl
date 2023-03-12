@@ -1,0 +1,15 @@
+version: "3.9"
+services: 
+  geth:
+  bui
+    dockerfile: ./containers/geth.Dockerfile
+    ports:
+      - "8545:8545"
+    volumes:
+      - "/mnt/chaindata:/root/eth-data"
+  prysm:
+    dockerfile: ./containers/prysm.Dockerfile
+    ports:
+      - "13000:13000"
+    volumes:
+      - "/mnt/chaindata:/root/eth-data"
