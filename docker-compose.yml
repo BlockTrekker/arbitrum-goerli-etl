@@ -1,39 +1,52 @@
 version: "3.9"
 services:
   geth:
+    hostname: geth
     build:
       context: .
-      dockerfile: ./services/geth/Dockerfile    
+      dockerfile: ./services/geth/Dockerfile
+    restart: always
     command: 
       - --goerli
-      - --syncmode=snap
-      - --cache=4096
       - --datadir=/root/eth-data
+      - --syncmode=snap
       - --http
-      - --http.api=eth,net,web3
-      - --http.vhosts="*"
+      - --http.port=8545
+      - --http.addr=0.0.0.0
+      - --http.vhosts=*
+      - --http.api=eth,net,web3,
       - --authrpc.jwtsecret=/opt/jwtsecret
+      - --authrpc.addr=geth
+      - --authrpc.port=8551
+      - --authrpc.vhosts=*
     volumes:
       - "/mnt/chaindata:/root/eth-data"
     ports:
+      - 30303:30303/tcp
+      - 30303:30303/udp
       - 8545:8545
+      - 8551:8551
+    networks:
+      - public
+      - private
     
   prysm:
+    hostname: prysm
     build:
       context: .
       dockerfile: ./services/prysm/Dockerfile    
+    restart: always
     ports:
-      - 13000:13000
+      - 4000:4000
+      - 13000:13000/tcp
+      - 12000:12000/udp
     volumes:
       - "/mnt/chaindata:/root/eth-data"
-    command:
-      - --goerli
-      - --datadir=/root/eth-data
-      - --execution-endpoint=http://geth:8545
-      - --jwt-secret=/opt/jwtsecret
-      - --checkpoint-sync-url=https://goerli.checkpoint-sync.ethpandaops.io
-      - --genesis-beacon-api-url=https://goerli.checkpoint-sync.ethpandaops.io
-    depends_on:
-      - geth
-    links:
-      - geth
+    command: --config-file=/opt/config.yaml
+    networks:
+      - public
+      - private
+networks:
+  public:
+  private:
+    internal: true
