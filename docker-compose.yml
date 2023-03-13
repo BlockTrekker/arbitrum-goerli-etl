@@ -1,10 +1,9 @@
 version: "3.9"
 services:
   geth:
-    hostname: geth
     build:
       context: .
-      dockerfile: ./services/geth/Dockerfile
+      dockerfile: ./docker/goerli/geth.Dockerfile
     restart: always
     command: 
       - --goerli
@@ -33,7 +32,7 @@ services:
     hostname: prysm
     build:
       context: .
-      dockerfile: ./services/prysm/Dockerfile    
+      dockerfile: ./docker/goerli/prysm.Dockerfile    
     restart: always
     ports:
       - 4000:4000
@@ -54,7 +53,7 @@ services:
       - 8547:8547
     volumes:
       - "/mnt/chaindata:/root/eth-data"
-      - "/tmp/arb:/tmp/"
+      - "/tmp/:/tmp/"
     command:
       - --l1.url=http://geth:8545
       - --l2.chain-id=421613
@@ -62,10 +61,13 @@ services:
       - --http.corsdomain=*
       - --http.addr=0.0.0.0
       - --http.vhosts=*
-      - --ipc.path=/tmp/nitro.ipc
+      - --ipc.path=ipc://tmp/arbitrum
     networks:
       - public
       - private
+    ipc: "host"
+  # etl:
+
 networks:
   public:
   private:

@@ -1,4 +1,4 @@
 # Geth client
 FROM ethereum/client-go:latest
 
-COPY ./jwtsecret /opt/jwtsecret
+COPY ./credentials.jwtsecret /opt/jwtsecret

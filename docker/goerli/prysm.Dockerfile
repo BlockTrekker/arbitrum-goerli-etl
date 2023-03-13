@@ -7,10 +7,10 @@ RUN curl https://github.com/eth-clients/eth2-networks/raw/master/shared/prater/g
 FROM prysmaticlabs/prysm-beacon-chain:latest
 
 # Copy shared JWT secret to container
-COPY ./jwtsecret /opt/jwtsecret
+COPY ./credentials.jwtsecret /opt/jwtsecret
 
 # Copy prysm config
-COPY ./beacon.yaml /opt/config.yaml
+COPY ./docker/goerli/beacon.yaml /opt/config.yaml
 
 # Copy praeter genesis
 COPY --from=builder /opt/genesis.ssz /opt/genesis.ssz
