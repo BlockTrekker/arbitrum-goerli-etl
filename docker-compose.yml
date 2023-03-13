@@ -54,6 +54,7 @@ services:
       - 8547:8547
     volumes:
       - "/mnt/chaindata:/root/eth-data"
+      - "/tmp/arb:/tmp/"
     command:
       - --l1.url=http://geth:8545
       - --l2.chain-id=421613
@@ -61,6 +62,7 @@ services:
       - --http.corsdomain=*
       - --http.addr=0.0.0.0
       - --http.vhosts=*
+      - --ipc.path=/tmp/nitro.ipc
     networks:
       - public
       - private
